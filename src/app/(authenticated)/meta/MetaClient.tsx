@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
-import Image from "next/image";
 import { createDeck, updateDeck, deleteDeck, reorderDecks } from "@/app/actions";
 
 interface Deck {
@@ -372,8 +371,9 @@ function DeckCard({
       {expanded && (deck.imageUrl || deck.cardList) && (
         <div className="border-t border-gray-100 px-2 sm:px-2.5 py-2">
           {deck.imageUrl && (
-            <div className="w-full aspect-[3/4] relative overflow-hidden rounded-lg mb-2">
-              <Image src={deck.imageUrl} alt={deck.name} fill className="object-contain" draggable={false} sizes="300px" />
+            <div className="w-full overflow-hidden rounded-lg mb-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={deck.imageUrl} alt={deck.name} className="w-full h-auto object-contain" draggable={false} />
             </div>
           )}
           {deck.cardList && (
