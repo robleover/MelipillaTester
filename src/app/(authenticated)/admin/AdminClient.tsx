@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { createInvitation, updateUserRole } from "@/app/actions";
+import { createInvitation, updateUserRole, toggleUserActive } from "@/app/actions";
 
 interface Member {
   id: string;
   name: string;
   email: string;
   role: string;
+  active: boolean;
   createdAt: string;
 }
 
@@ -125,6 +126,7 @@ export default function AdminClient({
               <th className="text-left px-4 py-2 text-xs font-medium text-gray-500 uppercase">Nombre</th>
               <th className="text-left px-4 py-2 text-xs font-medium text-gray-500 uppercase">Email</th>
               <th className="text-left px-4 py-2 text-xs font-medium text-gray-500 uppercase">Rol</th>
+              <th className="text-left px-4 py-2 text-xs font-medium text-gray-500 uppercase">Estado</th>
               <th className="text-left px-4 py-2 text-xs font-medium text-gray-500 uppercase">Desde</th>
             </tr>
           </thead>
@@ -145,6 +147,22 @@ export default function AdminClient({
                       <option value="MEMBER">Miembro</option>
                       <option value="ADMIN">Admin</option>
                     </select>
+                  )}
+                </td>
+                <td className="px-4 py-3">
+                  {m.id === currentUserId ? (
+                    <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">Activo</span>
+                  ) : (
+                    <button
+                      onClick={() => toggleUserActive(m.id, !m.active)}
+                      className={`px-3 py-1 rounded-full text-xs font-medium transition ${
+                        m.active
+                          ? "bg-green-100 text-green-700 hover:bg-red-100 hover:text-red-700"
+                          : "bg-red-100 text-red-700 hover:bg-green-100 hover:text-green-700"
+                      }`}
+                    >
+                      {m.active ? "Activo" : "Inactivo"}
+                    </button>
                   )}
                 </td>
                 <td className="px-4 py-3 text-xs text-gray-400">

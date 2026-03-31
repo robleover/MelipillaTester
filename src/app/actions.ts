@@ -344,3 +344,17 @@ export async function updateUserRole(userId: string, role: string) {
 
   revalidatePath("/admin");
 }
+
+export async function toggleUserActive(userId: string, active: boolean) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.teamId || session.user.role !== "ADMIN") {
+    throw new Error("Solo el admin puede activar/desactivar usuarios");
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { active },
+  });
+
+  revalidatePath("/admin");
+}

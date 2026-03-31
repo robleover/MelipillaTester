@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const publicPaths = ["/login", "/register", "/api/auth"];
+const publicPaths = ["/login", "/register", "/api/auth", "/pending"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -22,6 +22,11 @@ export async function middleware(request: NextRequest) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Redirect inactive users to pending page
+  if (!token.active) {
+    return NextResponse.redirect(new URL("/pending", request.url));
   }
 
   // Admin-only routes

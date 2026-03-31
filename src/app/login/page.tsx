@@ -28,7 +28,11 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      setError("Email o contraseña incorrectos");
+      if (result.error === "INACTIVE_USER") {
+        setError("Tu cuenta aún no ha sido activada por el admin. Contacta al administrador del team.");
+      } else {
+        setError("Email o contraseña incorrectos");
+      }
       setLoading(false);
     } else {
       router.push(callbackUrl);

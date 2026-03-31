@@ -33,6 +33,7 @@ async function main() {
       name: adminName,
       password: hashedPassword,
       role: "ADMIN",
+      active: true,
       teamId: team.id,
     },
   });
@@ -47,6 +48,7 @@ async function main() {
       name: "Jugador Test",
       password: memberPassword,
       role: "MEMBER",
+      active: true,
       teamId: team.id,
     },
   });

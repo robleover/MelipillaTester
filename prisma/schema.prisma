@@ -41,6 +41,7 @@ model User {
   name          String
   password      String?
   role          Role           @default(MEMBER)
+  active        Boolean        @default(false)
   avatarUrl     String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt

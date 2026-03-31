@@ -10,7 +10,7 @@ export default async function AdminPage() {
   const members = await prisma.user.findMany({
     where: { teamId: session.user.teamId },
     orderBy: { createdAt: "asc" },
-    select: { id: true, name: true, email: true, role: true, createdAt: true },
+    select: { id: true, name: true, email: true, role: true, active: true, createdAt: true },
   });
 
   const invitations = await prisma.invitation.findMany({

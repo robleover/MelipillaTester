@@ -48,6 +48,10 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        if (!user.active) {
+          throw new Error("INACTIVE_USER");
+        }
+
         return {
           id: user.id,
           email: user.email,
@@ -55,6 +59,7 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
           teamId: user.teamId,
           teamName: user.team?.name || null,
+          active: user.active,
         };
       },
     }),
@@ -70,6 +75,10 @@ export const authOptions: NextAuthOptions = {
             await prisma.user.update({ where: { id: dbUser.id }, data: { teamId: team.id } });
           }
         }
+        // Block inactive Google users
+        if (dbUser && !dbUser.active) {
+          return "/pending";
+        }
       }
       return true;
     },
@@ -79,6 +88,7 @@ export const authOptions: NextAuthOptions = {
         token.role = (user as { role: string }).role;
         token.teamId = (user as { teamId: string | null }).teamId;
         token.teamName = (user as { teamName: string | null }).teamName;
+        token.active = (user as { active?: boolean }).active ?? false;
       }
       // Refresh user data from DB on every token refresh for Google users
       if (trigger === "signIn" || !token.teamId) {
@@ -90,6 +100,7 @@ export const authOptions: NextAuthOptions = {
           token.role = dbUser.role;
           token.teamId = dbUser.teamId;
           token.teamName = dbUser.team?.name || null;
+          token.active = dbUser.active;
         }
       }
       return token;
