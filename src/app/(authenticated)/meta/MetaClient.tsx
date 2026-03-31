@@ -323,20 +323,15 @@ function DeckCard({
       `}
     >
       <div className={`h-1.5 rounded-t-xl ${tier.color}`} />
-      {deck.imageUrl && (
-        <div className="w-full aspect-[3/4] relative overflow-hidden">
-          <Image src={deck.imageUrl} alt={deck.name} fill className="object-cover" draggable={false} sizes="140px" />
-        </div>
-      )}
       <div className="p-2 sm:p-2.5">
         <p className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight truncate" title={deck.name}>{deck.name}</p>
         {deck.createdBy && <p className="text-[10px] text-gray-400 mt-0.5 truncate" title={`Creado por ${deck.createdBy.name}`}>por {deck.createdBy.name}</p>}
         {deck.description && <p className="text-[10px] sm:text-[11px] text-gray-400 mt-1 line-clamp-2">{deck.description}</p>}
         {deck.assignedTo && <p className="text-[10px] text-indigo-500 mt-1 truncate">👤 {deck.assignedTo.name}</p>}
         <div className="flex items-center justify-between mt-1.5 sm:mt-2 gap-1">
-          {deck.cardList ? (
+          {(deck.cardList || deck.imageUrl) ? (
             <button onClick={(e) => { e.stopPropagation(); onToggleExpand(); }} className="text-[10px] text-gray-400 hover:text-gray-600">
-              {expanded ? "▲" : "▼"}
+              {expanded ? "▲ Ocultar" : "▼ Detalle"}
             </button>
           ) : <span />}
           <div className="flex gap-0.5 sm:opacity-0 sm:group-hover:opacity-100 transition ml-auto">
@@ -374,9 +369,16 @@ function DeckCard({
           </div>
         )}
       </div>
-      {expanded && deck.cardList && (
+      {expanded && (deck.imageUrl || deck.cardList) && (
         <div className="border-t border-gray-100 px-2 sm:px-2.5 py-2">
-          <pre className="text-[10px] font-mono text-gray-500 max-h-32 overflow-auto whitespace-pre-wrap">{deck.cardList}</pre>
+          {deck.imageUrl && (
+            <div className="w-full aspect-[3/4] relative overflow-hidden rounded-lg mb-2">
+              <Image src={deck.imageUrl} alt={deck.name} fill className="object-contain" draggable={false} sizes="300px" />
+            </div>
+          )}
+          {deck.cardList && (
+            <pre className="text-[10px] font-mono text-gray-500 max-h-32 overflow-auto whitespace-pre-wrap">{deck.cardList}</pre>
+          )}
         </div>
       )}
     </div>
