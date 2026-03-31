@@ -1,7 +1,7 @@
 "use client";
 
 import { assignDeck, updateDeckStatus } from "@/app/actions";
-import { tierLabel, tierColor, statusLabel, statusColor } from "@/lib/utils";
+import { tierLabel, tierColor, statusColor } from "@/lib/utils";
 
 interface Deck {
   id: string;

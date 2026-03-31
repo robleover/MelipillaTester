@@ -189,9 +189,6 @@ export async function createDeckChange(formData: FormData) {
 
   if (!deckId || !description) throw new Error("Datos incompletos");
 
-  const addedCount = cardsAdded ? cardsAdded.split("\n").filter(Boolean).length : 0;
-  const removedCount = cardsRemoved ? cardsRemoved.split("\n").filter(Boolean).length : 0;
-
   await prisma.deckChange.create({
     data: {
       deckId,

@@ -1,6 +1,6 @@
 "use client";
 
-import { calculateWinrate, getWinrateColor, getWinrateBgColor, tierLabel, tierColor } from "@/lib/utils";
+import { calculateWinrate, getWinrateColor, tierLabel, tierColor } from "@/lib/utils";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 interface Deck {

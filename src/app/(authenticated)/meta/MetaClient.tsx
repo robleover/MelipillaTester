@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import Image from "next/image";
-import { createDeck, updateDeck, deleteDeck, updateDeckTier, reorderDecks } from "@/app/actions";
+import { createDeck, updateDeck, deleteDeck, reorderDecks } from "@/app/actions";
 
 interface Deck {
   id: string;
