@@ -38,7 +38,7 @@ export default function DecisionClient({
       {latestDecision && (
         <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-6">
           <h2 className="text-lg font-semibold text-indigo-900 mb-3">✅ Decisión vigente</h2>
-          <div className="flex gap-3 mb-3">
+          <div className="flex flex-wrap gap-3 mb-3">
             <span className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium">
               {latestDecision.approach === "ALL_SAME" ? "Opción A: Todos el mismo deck" : "Opción B: Decks distintos"}
             </span>
@@ -46,7 +46,7 @@ export default function DecisionClient({
               {new Date(latestDecision.decidedAt).toLocaleDateString("es-CL")}
             </span>
           </div>
-          <div className="flex gap-2 mb-3">
+          <div className="flex flex-wrap gap-2 mb-3">
             {latestDecision.chosenDecks.map((d) => (
               <span key={d.id} className="px-3 py-1 bg-white border border-indigo-200 rounded-lg text-sm font-medium text-indigo-700">
                 🃏 {d.name}

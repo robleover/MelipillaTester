@@ -1,9 +1,13 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import type { Adapter } from "next-auth/adapters";
 import { compare } from "bcryptjs";
 import prisma from "./prisma";
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma) as Adapter,
   session: {
     strategy: "jwt",
   },
@@ -11,6 +15,10 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -52,12 +60,37 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      // For Google sign-in, ensure user has a team
+      if (account?.provider === "google" && user?.email) {
+        const dbUser = await prisma.user.findUnique({ where: { email: user.email } });
+        if (dbUser && !dbUser.teamId) {
+          const team = await prisma.team.findFirst();
+          if (team) {
+            await prisma.user.update({ where: { id: dbUser.id }, data: { teamId: team.id } });
+          }
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
         token.role = (user as { role: string }).role;
         token.teamId = (user as { teamId: string | null }).teamId;
         token.teamName = (user as { teamName: string | null }).teamName;
+      }
+      // Refresh user data from DB on every token refresh for Google users
+      if (trigger === "signIn" || !token.teamId) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          include: { team: true },
+        });
+        if (dbUser) {
+          token.role = dbUser.role;
+          token.teamId = dbUser.teamId;
+          token.teamName = dbUser.team?.name || null;
+        }
       }
       return token;
     },

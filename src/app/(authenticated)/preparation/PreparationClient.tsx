@@ -48,12 +48,12 @@ export default function PreparationClient({
   return (
     <div>
       {/* Deck selector */}
-      <div className="flex gap-3 mb-6">
+      <div className="flex flex-wrap gap-2 sm:gap-3 mb-6">
         {chosenDecks.map((d) => (
           <button
             key={d.id}
             onClick={() => setSelectedDeck(d.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition ${
               selectedDeck === d.id
                 ? "bg-indigo-600 text-white"
                 : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"

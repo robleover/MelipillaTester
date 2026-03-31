@@ -29,7 +29,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
         <StatCard label="Decks en testeo" value={decksInTesting} icon="🃏" />
         <StatCard label="Decks elegidos" value={decksChosen} icon="✅" />
         <StatCard label="Partidas totales" value={totalGames} icon="⚔️" />
@@ -37,7 +37,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <QuickAction href="/meta" title="Mapear Meta" desc="Agregar decks al metagame" icon="🔍" />
         <QuickAction href="/testing" title="Registrar Testeo" desc="Registrar resultados de partidas" icon="⚔️" />
         <QuickAction href="/analysis" title="Ver Análisis" desc="Winrates y matchup matrix" icon="📊" />

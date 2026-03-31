@@ -37,6 +37,20 @@ async function main() {
     },
   });
 
+  // Create member test user
+  const memberPassword = await hash("member123", 12);
+  const member = await prisma.user.upsert({
+    where: { email: "member@melipillatester.cl" },
+    update: {},
+    create: {
+      email: "member@melipillatester.cl",
+      name: "Jugador Test",
+      password: memberPassword,
+      role: "MEMBER",
+      teamId: team.id,
+    },
+  });
+
   // Create default active season
   const season = await prisma.season.upsert({
     where: { id: "default-season" },
@@ -51,7 +65,8 @@ async function main() {
 
   console.log("✅ Seed completed:");
   console.log(`   Team: ${team.name}`);
-  console.log(`   Admin: ${admin.email}`);
+  console.log(`   Admin: ${admin.email} / admin123`);
+  console.log(`   Member: ${member.email} / member123`);
   console.log(`   Season: ${season.name}`);
 }
 

@@ -33,7 +33,7 @@ export default function TestingClient({ decks, results }: { decks: Deck[]; resul
 
   return (
     <div>
-      <div className="flex gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-6">
         <button
           onClick={() => setShowForm(!showForm)}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm font-medium"
@@ -134,8 +134,8 @@ export default function TestingClient({ decks, results }: { decks: Deck[]; resul
       )}
 
       {/* Results table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <table className="w-full">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+        <table className="w-full min-w-[700px]">
           <thead className="bg-gray-50">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Matchup</th>

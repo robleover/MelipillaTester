@@ -83,7 +83,7 @@ export default function AdminClient({
 
         {showInviteForm && (
           <div className="mb-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-            <form onSubmit={handleInvite} className="flex gap-3">
+            <form onSubmit={handleInvite} className="flex flex-col sm:flex-row gap-3">
               <input
                 type="email"
                 value={inviteEmail}
@@ -118,7 +118,8 @@ export default function AdminClient({
           </div>
         )}
 
-        <table className="w-full">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[500px]">
           <thead className="bg-gray-50">
             <tr>
               <th className="text-left px-4 py-2 text-xs font-medium text-gray-500 uppercase">Nombre</th>
@@ -153,6 +154,7 @@ export default function AdminClient({
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Invitations */}

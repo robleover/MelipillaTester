@@ -16,6 +16,7 @@ enum Tier {
   TIER1
   TIER2
   ROGUE
+  TIER3
 }
 
 enum SeasonStatus {
@@ -38,7 +39,7 @@ model User {
   id            String         @id @default(cuid())
   email         String         @unique
   name          String
-  password      String
+  password      String?
   role          Role           @default(MEMBER)
   avatarUrl     String?
   createdAt     DateTime       @default(now())
@@ -46,8 +47,28 @@ model User {
   teamId        String?
   team          Team?          @relation(fields: [teamId], references: [id])
   assignedDecks Deck[]         @relation("AssignedPlayer")
+  createdDecks  Deck[]         @relation("CreatedBy")
   matchResults  MatchResult[]
   invitations   Invitation[]
+  accounts      Account[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
 model Team {
@@ -79,8 +100,12 @@ model Deck {
   name            String
   tier            Tier
   description     String?
+  imageUrl        String?
   cardList        String?       @db.Text
+  position        Int           @default(0)
   status          DeckStatus    @default(TESTING)
+  createdById     String?
+  createdBy       User?         @relation("CreatedBy", fields: [createdById], references: [id])
   assignedToId    String?
   assignedTo      User?         @relation("AssignedPlayer", fields: [assignedToId], references: [id])
   seasonId        String

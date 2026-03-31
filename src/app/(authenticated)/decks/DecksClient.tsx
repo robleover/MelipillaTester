@@ -21,7 +21,7 @@ export default function DecksClient({ decks, members }: { decks: Deck[]; members
   return (
     <div>
       {/* Summary */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 mb-6">
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center">
           <p className="text-2xl font-bold text-yellow-700">{decks.filter((d) => d.status === "TESTING").length}</p>
           <p className="text-xs text-yellow-600">En testeo</p>
@@ -37,8 +37,8 @@ export default function DecksClient({ decks, members }: { decks: Deck[]; members
       </div>
 
       {/* Deck table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <table className="w-full">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+        <table className="w-full min-w-[600px]">
           <thead className="bg-gray-50">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Deck</th>

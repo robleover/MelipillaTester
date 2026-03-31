@@ -11,18 +11,18 @@ export default async function MetaPage() {
     where: { teamId: session.user.teamId, status: "ACTIVE" },
     include: {
       decks: {
-        orderBy: [{ tier: "asc" }, { name: "asc" }],
-        include: { assignedTo: true },
+        orderBy: [{ tier: "asc" }, { position: "asc" }, { name: "asc" }],
+        include: { assignedTo: true, createdBy: { select: { id: true, name: true } } },
       },
     },
   });
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">🔍 Mapa del Meta</h1>
-        <p className="text-gray-500 mt-1">
-          Define los decks relevantes del metagame actual. Identifica Tier 1, Tier 2 y Rogue.
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">🔍 Mapa del Meta</h1>
+        <p className="text-gray-500 mt-1 text-sm">
+          Define los decks relevantes del metagame actual.
         </p>
       </div>
       <MetaClient

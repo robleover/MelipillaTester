@@ -18,15 +18,18 @@ export async function createDeck(formData: FormData) {
   const tier = formData.get("tier") as string;
   const description = formData.get("description") as string;
   const cardList = formData.get("cardList") as string;
+  const imageUrl = formData.get("imageUrl") as string;
 
   if (!name || !tier) throw new Error("Nombre y tier son requeridos");
 
   await prisma.deck.create({
     data: {
       name,
-      tier: tier as "TIER1" | "TIER2" | "ROGUE",
+      tier: tier as "TIER1" | "TIER2" | "ROGUE" | "TIER3",
       description: description || null,
       cardList: cardList || null,
+      imageUrl: imageUrl || null,
+      createdById: session.user.id,
       seasonId: season.id,
     },
   });
@@ -43,6 +46,7 @@ export async function updateDeck(formData: FormData) {
   const tier = formData.get("tier") as string;
   const description = formData.get("description") as string;
   const cardList = formData.get("cardList") as string;
+  const imageUrl = formData.get("imageUrl") as string;
 
   if (!id || !name || !tier) throw new Error("Datos incompletos");
 
@@ -50,9 +54,10 @@ export async function updateDeck(formData: FormData) {
     where: { id },
     data: {
       name,
-      tier: tier as "TIER1" | "TIER2" | "ROGUE",
+      tier: tier as "TIER1" | "TIER2" | "ROGUE" | "TIER3",
       description: description || null,
       cardList: cardList || null,
+      imageUrl: imageUrl || null,
     },
   });
 
@@ -91,6 +96,34 @@ export async function updateDeckStatus(deckId: string, status: string) {
   });
 
   revalidatePath("/decks");
+}
+
+export async function updateDeckTier(deckId: string, tier: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.teamId) throw new Error("No autorizado");
+
+  await prisma.deck.update({
+    where: { id: deckId },
+    data: { tier: tier as "TIER1" | "TIER2" | "ROGUE" | "TIER3" },
+  });
+
+  revalidatePath("/meta");
+}
+
+export async function reorderDecks(deckOrders: { id: string; tier: string; position: number }[]) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.teamId) throw new Error("No autorizado");
+
+  await prisma.$transaction(
+    deckOrders.map(({ id, tier, position }) =>
+      prisma.deck.update({
+        where: { id },
+        data: { tier: tier as "TIER1" | "TIER2" | "ROGUE" | "TIER3", position },
+      })
+    )
+  );
+
+  revalidatePath("/meta");
 }
 
 export async function createMatchResult(formData: FormData) {
