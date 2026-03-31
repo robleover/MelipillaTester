@@ -19,6 +19,7 @@ export async function createDeck(formData: FormData) {
   const description = formData.get("description") as string;
   const cardList = formData.get("cardList") as string;
   const imageUrl = formData.get("imageUrl") as string;
+  const format = (formData.get("format") as string) || "RACIAL_LIBRE";
 
   if (!name || !tier) throw new Error("Nombre y tier son requeridos");
 
@@ -26,6 +27,7 @@ export async function createDeck(formData: FormData) {
     data: {
       name,
       tier: tier as "TIER1" | "TIER2" | "ROGUE" | "TIER3",
+      format: format as "RACIAL_LIBRE" | "RACIAL_EDICION",
       description: description || null,
       cardList: cardList || null,
       imageUrl: imageUrl || null,
@@ -142,6 +144,7 @@ export async function createMatchResult(formData: FormData) {
   const goingFirst = formData.get("goingFirst") as string;
   const withSidePlan = formData.get("withSidePlan") === "true";
   const notes = formData.get("notes") as string;
+  const format = (formData.get("format") as string) || "RACIAL_LIBRE";
 
   if (!deckAId || !deckBId || isNaN(winsA) || isNaN(winsB)) {
     throw new Error("Datos incompletos");
@@ -160,6 +163,7 @@ export async function createMatchResult(formData: FormData) {
       goingFirst: goingFirst || "MIXED",
       withSidePlan,
       notes: notes || null,
+      format: format as "RACIAL_LIBRE" | "RACIAL_EDICION",
       playerId: session.user.id,
       seasonId: season.id,
     },
@@ -236,6 +240,7 @@ export async function createTeamDecision(formData: FormData) {
   const approach = formData.get("approach") as string;
   const notes = formData.get("notes") as string;
   const deckIds = formData.getAll("deckIds") as string[];
+  const format = (formData.get("format") as string) || "RACIAL_LIBRE";
 
   if (!approach || deckIds.length === 0) {
     throw new Error("Selecciona al menos un deck y un enfoque");
@@ -245,6 +250,7 @@ export async function createTeamDecision(formData: FormData) {
     data: {
       seasonId: season.id,
       approach: approach as "ALL_SAME" | "SPLIT",
+      format: format as "RACIAL_LIBRE" | "RACIAL_EDICION",
       notes: notes || null,
       chosenDecks: { connect: deckIds.map((id) => ({ id })) },
     },
@@ -275,6 +281,7 @@ export async function saveMatchupPlan(formData: FormData) {
   const plan = formData.get("plan") as string;
   const keyCards = formData.get("keyCards") as string;
   const sideboardPlan = formData.get("sideboardPlan") as string;
+  const format = (formData.get("format") as string) || "RACIAL_LIBRE";
 
   if (!deckId || !opponentDeckId || !plan) {
     throw new Error("Datos incompletos");
@@ -293,6 +300,7 @@ export async function saveMatchupPlan(formData: FormData) {
         plan,
         keyCards: keyCards || null,
         sideboardPlan: sideboardPlan || null,
+        format: format as "RACIAL_LIBRE" | "RACIAL_EDICION",
         seasonId: season.id,
       },
     });

@@ -23,7 +23,7 @@ interface MatchResult {
   createdAt: string;
 }
 
-export default function TestingClient({ decks, results }: { decks: Deck[]; results: MatchResult[] }) {
+export default function TestingClient({ decks, results, format }: { decks: Deck[]; results: MatchResult[]; format: string }) {
   const [showForm, setShowForm] = useState(false);
   const [filterDeck, setFilterDeck] = useState("");
 
@@ -59,6 +59,7 @@ export default function TestingClient({ decks, results }: { decks: Deck[]; resul
           <h3 className="text-lg font-semibold mb-4">Registrar Set de Partidas</h3>
           <form
             action={async (formData) => {
+              formData.set("format", format);
               await createMatchResult(formData);
               setShowForm(false);
             }}

@@ -2,16 +2,21 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import TestingClient from "./TestingClient";
+import FormatSelector from "@/components/FormatSelector";
+import { Suspense } from "react";
 
-export default async function TestingPage() {
+export default async function TestingPage({ searchParams }: { searchParams: { format?: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.teamId) return null;
+
+  const format = searchParams.format === "RACIAL_EDICION" ? "RACIAL_EDICION" : "RACIAL_LIBRE";
 
   const season = await prisma.season.findFirst({
     where: { teamId: session.user.teamId, status: "ACTIVE" },
     include: {
-      decks: { where: { status: { not: "DISCARDED" } }, orderBy: { name: "asc" } },
+      decks: { where: { status: { not: "DISCARDED" }, format }, orderBy: { name: "asc" } },
       matchResults: {
+        where: { format },
         orderBy: { createdAt: "desc" },
         include: { deckA: true, deckB: true, player: true },
       },
@@ -20,15 +25,19 @@ export default async function TestingPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">⚔️ Sistema de Testeo</h1>
-        <p className="text-gray-500 mt-1">
-          Registra sets de partidas. Mínimo 20-30 partidas por matchup para datos fiables.
-        </p>
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">⚔️ Sistema de Testeo</h1>
+          <p className="text-gray-500 mt-1 text-sm">
+            Registra sets de partidas. Mínimo 20-30 partidas por matchup para datos fiables.
+          </p>
+        </div>
+        <Suspense><FormatSelector /></Suspense>
       </div>
       <TestingClient
         decks={JSON.parse(JSON.stringify(season?.decks || []))}
         results={JSON.parse(JSON.stringify(season?.matchResults || []))}
+        format={format}
       />
     </div>
   );

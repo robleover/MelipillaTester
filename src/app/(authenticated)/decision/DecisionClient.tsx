@@ -22,10 +22,12 @@ export default function DecisionClient({
   decks,
   decisions,
   isAdmin,
+  format,
 }: {
   decks: Deck[];
   decisions: Decision[];
   isAdmin: boolean;
+  format: string;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [selectedDecks, setSelectedDecks] = useState<string[]>([]);
@@ -93,6 +95,7 @@ export default function DecisionClient({
             <div className="mt-4 bg-white rounded-xl border border-gray-200 p-6">
               <form
                 action={async (formData) => {
+                  formData.set("format", format);
                   for (const id of selectedDecks) {
                     formData.append("deckIds", id);
                   }

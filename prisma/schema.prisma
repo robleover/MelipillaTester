@@ -35,6 +35,11 @@ enum TeamApproach {
   SPLIT
 }
 
+enum Format {
+  RACIAL_LIBRE
+  RACIAL_EDICION
+}
+
 model User {
   id            String         @id @default(cuid())
   email         String         @unique
@@ -101,6 +106,7 @@ model Season {
 model Deck {
   id              String        @id @default(cuid())
   name            String
+  format          Format        @default(RACIAL_LIBRE)
   tier            Tier
   description     String?
   imageUrl        String?
@@ -125,6 +131,7 @@ model Deck {
 
 model MatchResult {
   id            String   @id @default(cuid())
+  format        Format   @default(RACIAL_LIBRE)
   deckAId       String
   deckA         Deck     @relation("DeckA", fields: [deckAId], references: [id], onDelete: Cascade)
   deckBId       String
@@ -143,6 +150,7 @@ model MatchResult {
 
 model TeamDecision {
   id          String       @id @default(cuid())
+  format      Format       @default(RACIAL_LIBRE)
   seasonId    String
   season      Season       @relation(fields: [seasonId], references: [id], onDelete: Cascade)
   chosenDecks Deck[]       @relation("ChosenDecks")
@@ -153,6 +161,7 @@ model TeamDecision {
 
 model MatchupPlan {
   id              String  @id @default(cuid())
+  format          Format  @default(RACIAL_LIBRE)
   deckId          String
   deck            Deck    @relation("PlanDeck", fields: [deckId], references: [id], onDelete: Cascade)
   opponentDeckId  String

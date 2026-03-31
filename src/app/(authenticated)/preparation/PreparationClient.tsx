@@ -24,10 +24,12 @@ export default function PreparationClient({
   chosenDecks,
   allDecks,
   plans,
+  format,
 }: {
   chosenDecks: Deck[];
   allDecks: Deck[];
   plans: Plan[];
+  format: string;
 }) {
   const [selectedDeck, setSelectedDeck] = useState<string>(chosenDecks[0]?.id || "");
   const [editingPlan, setEditingPlan] = useState<string | null>(null);
@@ -105,6 +107,7 @@ export default function PreparationClient({
           <PlanForm
             deckId={selectedDeck}
             allDecks={allDecks.filter((d) => d.id !== selectedDeck)}
+            format={format}
             onClose={() => setEditingPlan(null)}
           />
         )}
@@ -128,6 +131,7 @@ export default function PreparationClient({
                     deckId={selectedDeck}
                     allDecks={allDecks.filter((d) => d.id !== selectedDeck)}
                     existingPlan={plan}
+                    format={format}
                     onClose={() => setEditingPlan(null)}
                   />
                 ) : (
@@ -165,17 +169,20 @@ function PlanForm({
   deckId,
   allDecks,
   existingPlan,
+  format,
   onClose,
 }: {
   deckId: string;
   allDecks: Deck[];
   existingPlan?: Plan;
+  format: string;
   onClose: () => void;
 }) {
   return (
     <form
       action={async (formData) => {
         formData.set("deckId", deckId);
+        formData.set("format", format);
         if (existingPlan) formData.set("id", existingPlan.id);
         await saveMatchupPlan(formData);
         onClose();

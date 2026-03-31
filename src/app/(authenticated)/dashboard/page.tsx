@@ -2,16 +2,20 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Link from "next/link";
+import FormatSelector from "@/components/FormatSelector";
+import { Suspense } from "react";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: { format?: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.teamId) return null;
+
+  const format = searchParams.format === "RACIAL_EDICION" ? "RACIAL_EDICION" : "RACIAL_LIBRE";
 
   const season = await prisma.season.findFirst({
     where: { teamId: session.user.teamId, status: "ACTIVE" },
     include: {
-      decks: { include: { assignedTo: true } },
-      matchResults: { orderBy: { createdAt: "desc" }, take: 10, include: { deckA: true, deckB: true, player: true } },
+      decks: { where: { format }, include: { assignedTo: true } },
+      matchResults: { where: { format }, orderBy: { createdAt: "desc" }, take: 10, include: { deckA: true, deckB: true, player: true } },
     },
   });
 
@@ -21,11 +25,14 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 mt-1">
-          Temporada: <span className="font-medium text-indigo-600">{season?.name || "Sin temporada activa"}</span>
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-500 mt-1">
+            Temporada: <span className="font-medium text-indigo-600">{season?.name || "Sin temporada activa"}</span>
+          </p>
+        </div>
+        <Suspense><FormatSelector /></Suspense>
       </div>
 
       {/* Stats */}

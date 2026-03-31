@@ -17,7 +17,8 @@ interface Member {
   name: string;
 }
 
-export default function DecksClient({ decks, members }: { decks: Deck[]; members: Member[] }) {
+export default function DecksClient({ decks, members, format }: { decks: Deck[]; members: Member[]; format: string }) {
+  void format;
   return (
     <div>
       {/* Summary */}

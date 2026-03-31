@@ -19,7 +19,8 @@ interface Deck {
   deckChanges: DeckChange[];
 }
 
-export default function IterationsClient({ decks }: { decks: Deck[] }) {
+export default function IterationsClient({ decks, format }: { decks: Deck[]; format: string }) {
+  void format;
   const [selectedDeck, setSelectedDeck] = useState<string>(decks[0]?.id || "");
   const [showForm, setShowForm] = useState(false);
 

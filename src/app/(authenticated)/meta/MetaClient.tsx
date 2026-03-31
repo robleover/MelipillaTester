@@ -26,7 +26,7 @@ const TIERS: { key: TierKey; label: string; color: string; bg: string; border: s
   { key: "TIER3", label: "C", color: "bg-emerald-500", bg: "bg-emerald-500/10", border: "border-emerald-500/40", glow: "shadow-emerald-500/20" },
 ];
 
-export default function MetaClient({ decks: initialDecks, isAdmin }: { decks: Deck[]; isAdmin: boolean }) {
+export default function MetaClient({ decks: initialDecks, isAdmin, format }: { decks: Deck[]; isAdmin: boolean; format: string }) {
   const [decks, setDecks] = useState<Deck[]>(initialDecks);
   const [showForm, setShowForm] = useState(false);
   const [editingDeck, setEditingDeck] = useState<Deck | null>(null);
@@ -187,6 +187,7 @@ export default function MetaClient({ decks: initialDecks, isAdmin }: { decks: De
       {showForm && (
         <DeckForm
           editingDeck={editingDeck}
+          format={format}
           onClose={() => { setShowForm(false); setEditingDeck(null); }}
           onSaved={(deck, isEdit) => {
             if (isEdit) setDecks((prev) => prev.map((d) => (d.id === deck.id ? deck : d)));
@@ -382,8 +383,8 @@ function DeckCard({
   );
 }
 
-function DeckForm({ editingDeck, onClose, onSaved }: {
-  editingDeck: Deck | null; onClose: () => void;
+function DeckForm({ editingDeck, format, onClose, onSaved }: {
+  editingDeck: Deck | null; format: string; onClose: () => void;
   onSaved: (deck: Deck, isEdit: boolean) => void;
 }) {
   const [imagePreview, setImagePreview] = useState<string | null>(editingDeck?.imageUrl || null);
@@ -413,6 +414,7 @@ function DeckForm({ editingDeck, onClose, onSaved }: {
         <form
           action={async (formData) => {
             formData.set("imageUrl", imageUrl);
+            formData.set("format", format);
             if (editingDeck) {
               formData.set("id", editingDeck.id);
               await updateDeck(formData);
