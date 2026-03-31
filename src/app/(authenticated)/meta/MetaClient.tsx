@@ -414,7 +414,6 @@ function DeckForm({ editingDeck, format, onClose, onSaved }: {
         <form
           action={async (formData) => {
             formData.set("imageUrl", imageUrl);
-            formData.set("format", format);
             if (editingDeck) {
               formData.set("id", editingDeck.id);
               await updateDeck(formData);
@@ -453,6 +452,13 @@ function DeckForm({ editingDeck, format, onClose, onSaved }: {
                 <option value="TIER3">C — Tier 3 (Inferior)</option>
               </select>
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Formato</label>
+            <select name="format" required defaultValue={format} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900">
+              <option value="RACIAL_LIBRE">Racial Libre</option>
+              <option value="RACIAL_EDICION">Racial Edición</option>
+            </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
