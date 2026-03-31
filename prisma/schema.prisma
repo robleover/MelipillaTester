@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum Tier {
+  TIER1
+  TIER2
+  ROGUE
+}
+
+enum SeasonStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum DeckStatus {
+  TESTING
+  DISCARDED
+  CHOSEN
+}
+
+enum TeamApproach {
+  ALL_SAME
+  SPLIT
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String
+  password      String
+  role          Role           @default(MEMBER)
+  avatarUrl     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  teamId        String?
+  team          Team?          @relation(fields: [teamId], references: [id])
+  assignedDecks Deck[]         @relation("AssignedPlayer")
+  matchResults  MatchResult[]
+  invitations   Invitation[]
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  members     User[]
+  seasons     Season[]
+}
+
+model Season {
+  id            String         @id @default(cuid())
+  name          String
+  startDate     DateTime       @default(now())
+  endDate       DateTime?
+  status        SeasonStatus   @default(ACTIVE)
+  teamId        String
+  team          Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  decks         Deck[]
+  matchResults  MatchResult[]
+  decisions     TeamDecision[]
+  matchupPlans  MatchupPlan[]
+  createdAt     DateTime       @default(now())
+}
+
+model Deck {
+  id              String        @id @default(cuid())
+  name            String
+  tier            Tier
+  description     String?
+  cardList        String?       @db.Text
+  status          DeckStatus    @default(TESTING)
+  assignedToId    String?
+  assignedTo      User?         @relation("AssignedPlayer", fields: [assignedToId], references: [id])
+  seasonId        String
+  season          Season        @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  matchResultsA   MatchResult[] @relation("DeckA")
+  matchResultsB   MatchResult[] @relation("DeckB")
+  matchupPlansAs  MatchupPlan[] @relation("PlanDeck")
+  matchupPlansVs  MatchupPlan[] @relation("OpponentDeck")
+  chosenIn        TeamDecision[] @relation("ChosenDecks")
+  deckChanges     DeckChange[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model MatchResult {
+  id            String   @id @default(cuid())
+  deckAId       String
+  deckA         Deck     @relation("DeckA", fields: [deckAId], references: [id], onDelete: Cascade)
+  deckBId       String
+  deckB         Deck     @relation("DeckB", fields: [deckBId], references: [id], onDelete: Cascade)
+  winsA         Int
+  winsB         Int
+  goingFirst    String   @default("MIXED") // A, B, or MIXED
+  withSidePlan  Boolean  @default(false)
+  notes         String?  @db.Text
+  playerId      String
+  player        User     @relation(fields: [playerId], references: [id])
+  seasonId      String
+  season        Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+}
+
+model TeamDecision {
+  id          String       @id @default(cuid())
+  seasonId    String
+  season      Season       @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  chosenDecks Deck[]       @relation("ChosenDecks")
+  approach    TeamApproach
+  notes       String?      @db.Text
+  decidedAt   DateTime     @default(now())
+}
+
+model MatchupPlan {
+  id              String  @id @default(cuid())
+  deckId          String
+  deck            Deck    @relation("PlanDeck", fields: [deckId], references: [id], onDelete: Cascade)
+  opponentDeckId  String
+  opponentDeck    Deck    @relation("OpponentDeck", fields: [opponentDeckId], references: [id], onDelete: Cascade)
+  plan            String  @db.Text
+  keyCards        String? @db.Text
+  sideboardPlan   String? @db.Text
+  seasonId        String
+  season          Season  @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model DeckChange {
+  id          String   @id @default(cuid())
+  deckId      String
+  deck        Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  description String
+  cardsAdded  String?  @db.Text
+  cardsRemoved String? @db.Text
+  createdAt   DateTime @default(now())
+}
+
+model Invitation {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  teamId    String
+  role      Role     @default(MEMBER)
+  used      Boolean  @default(false)
+  createdBy String
+  creator   User     @relation(fields: [createdBy], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
