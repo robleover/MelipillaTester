@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
           include: { team: true },
         });
 
-        if (!user) {
+        if (!user || !user.password) {
           return null;
         }
 
