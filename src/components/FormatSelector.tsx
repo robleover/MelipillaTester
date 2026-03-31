@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 
 export default function FormatSelector() {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const current = searchParams.get("format") || "RACIAL_LIBRE";
@@ -11,7 +10,7 @@ export default function FormatSelector() {
   function switchFormat(format: string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("format", format);
-    router.push(`${pathname}?${params.toString()}`);
+    window.location.href = `${pathname}?${params.toString()}`;
   }
 
   return (
