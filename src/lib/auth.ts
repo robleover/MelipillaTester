@@ -68,7 +68,17 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       // For Google sign-in, ensure user has a team
       if (account?.provider === "google" && user?.email) {
-        const dbUser = await prisma.user.findUnique({ where: { email: user.email } });
+        // Retry logic for Render free tier cold starts
+        let dbUser = null;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            dbUser = await prisma.user.findUnique({ where: { email: user.email } });
+            break;
+          } catch (e) {
+            if (attempt === 2) throw e;
+            await new Promise((r) => setTimeout(r, 2000));
+          }
+        }
         if (dbUser && !dbUser.teamId) {
           const team = await prisma.team.findFirst();
           if (team) {

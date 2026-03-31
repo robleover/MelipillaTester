@@ -108,7 +108,12 @@ function LoginContent() {
         </div>
 
         <button
-          onClick={() => { setGoogleLoading(true); signIn("google", { callbackUrl }); }}
+          onClick={async () => {
+            setGoogleLoading(true);
+            // Wake up DB before OAuth (Render free tier sleeps after inactivity)
+            try { await fetch("/api/health"); } catch { /* ignore */ }
+            signIn("google", { callbackUrl });
+          }}
           disabled={googleLoading}
           className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
