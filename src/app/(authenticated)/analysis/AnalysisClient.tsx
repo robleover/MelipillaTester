@@ -77,7 +77,7 @@ export default function AnalysisClient({
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
                   <Tooltip
-                    formatter={(value: number) => [`${value}%`, "Winrate"]}
+                    formatter={(value) => [`${value}%`, "Winrate"]}
                     labelFormatter={(label) => `Deck: ${label}`}
                   />
                   <Bar dataKey="winrate" radius={[4, 4, 0, 0]}>

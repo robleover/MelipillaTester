@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual de Usuario — MelipillaTester</title>
+  <style>
+    @page {
+      margin: 1.5cm 2cm;
+      size: A4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #1e293b;
+      line-height: 1.7;
+      background: #fff;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Cover page */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 90vh;
+      text-align: center;
+      page-break-after: always;
+    }
+    .cover .logo { font-size: 4rem; margin-bottom: 1rem; }
+    .cover h1 { font-size: 2.5rem; color: #312e81; margin-bottom: 0.5rem; }
+    .cover .subtitle { font-size: 1.3rem; color: #6366f1; margin-bottom: 2rem; }
+    .cover .meta-info { font-size: 0.95rem; color: #64748b; line-height: 2; }
+
+    /* Table of contents */
+    .toc { page-break-after: always; }
+    .toc h2 { font-size: 1.5rem; color: #312e81; margin-bottom: 1.5rem; border-bottom: 3px solid #6366f1; padding-bottom: 0.5rem; }
+    .toc ol { padding-left: 1.5rem; }
+    .toc li { margin-bottom: 0.6rem; font-size: 1rem; color: #334155; }
+    .toc li a { color: #4f46e5; text-decoration: none; }
+    .toc li a:hover { text-decoration: underline; }
+
+    /* Section styles */
+    h2 {
+      font-size: 1.6rem;
+      color: #312e81;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 3px solid #6366f1;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 1.2rem;
+      color: #4338ca;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      page-break-after: avoid;
+    }
+    p { margin-bottom: 0.8rem; }
+    ul, ol { margin-bottom: 0.8rem; padding-left: 1.5rem; }
+    li { margin-bottom: 0.3rem; }
+
+    /* Screenshot placeholder */
+    .screenshot {
+      border: 2px dashed #c7d2fe;
+      background: #eef2ff;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin: 1.2rem 0;
+      color: #6366f1;
+      font-style: italic;
+      font-size: 0.9rem;
+      page-break-inside: avoid;
+    }
+    .screenshot::before {
+      content: "📷";
+      display: block;
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+      font-style: normal;
+    }
+
+    /* Info boxes */
+    .tip, .warning, .note {
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      page-break-inside: avoid;
+    }
+    .tip { background: #ecfdf5; border-left: 4px solid #10b981; }
+    .tip::before { content: "💡 Consejo: "; font-weight: 700; color: #059669; }
+    .warning { background: #fffbeb; border-left: 4px solid #f59e0b; }
+    .warning::before { content: "⚠️ Importante: "; font-weight: 700; color: #d97706; }
+    .note { background: #eff6ff; border-left: 4px solid #3b82f6; }
+    .note::before { content: "ℹ️ Nota: "; font-weight: 700; color: #2563eb; }
+
+    /* Step by step */
+    .steps { counter-reset: step; margin: 1rem 0; }
+    .step {
+      counter-increment: step;
+      padding: 0.8rem 1rem 0.8rem 3.5rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      page-break-inside: avoid;
+    }
+    .step::before {
+      content: counter(step);
+      position: absolute;
+      left: 1rem;
+      top: 0.8rem;
+      background: #6366f1;
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      page-break-inside: avoid;
+    }
+    th { background: #4338ca; color: #fff; text-align: left; padding: 0.6rem 0.8rem; }
+    td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) { background: #f8fafc; }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+
+    /* Keyboard shortcut */
+    kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 0.8rem;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    /* Print styles */
+    @media print {
+      body { padding: 0; max-width: none; }
+      .no-print { display: none; }
+      h2 { break-after: avoid; }
+      .step, .tip, .warning, .note, .screenshot, table { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== PORTADA ==================== -->
+<div class="cover">
+  <div class="logo">🏆</div>
+  <h1>MelipillaTester</h1>
+  <div class="subtitle">Preparación de Torneos — Mitos y Leyendas</div>
+  <p style="font-size:1.1rem; color:#475569; max-width:400px; margin-bottom:2rem;">
+    Manual de Usuario<br>Rol: Miembro del Equipo
+  </p>
+  <div class="meta-info">
+    Versión 1.0 — Marzo 2026<br>
+    Equipo: Melipilla Testers
+  </div>
+</div>
+
+<!-- ==================== ÍNDICE ==================== -->
+<div class="toc">
+  <h2>Índice de Contenidos</h2>
+  <ol>
+    <li><a href="#intro">Introducción</a></li>
+    <li><a href="#registro">Registro y Activación de Cuenta</a></li>
+    <li><a href="#login">Inicio de Sesión</a></li>
+    <li><a href="#nav">Navegación General</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#meta">Mapa del Meta</a></li>
+    <li><a href="#decks">Selección de Decks</a></li>
+    <li><a href="#testing">Sistema de Testeo</a></li>
+    <li><a href="#analysis">Análisis de Winrates</a></li>
+    <li><a href="#iterations">Iteración de Listas</a></li>
+    <li><a href="#decision">Decisión Final del Team</a></li>
+    <li><a href="#preparation">Preparación Final</a></li>
+    <li><a href="#permisos">Resumen de Permisos</a></li>
+  </ol>
+</div>
+
+<!-- ==================== 1. INTRODUCCIÓN ==================== -->
+<h2 id="intro">1. Introducción</h2>
+<p>
+  <strong>MelipillaTester</strong> es un portal web diseñado para que equipos competitivos del juego de cartas
+  <em>Mitos y Leyendas</em> preparen torneos de forma organizada, data-driven y colaborativa.
+</p>
+<p>La plataforma te permite:</p>
+<ul>
+  <li>Mapear el metagame actual con un sistema de tiers visual (TierMaker).</li>
+  <li>Registrar sets de partidas de testeo entre decks.</li>
+  <li>Analizar winrates y matrices de matchup en tiempo real.</li>
+  <li>Iterar listas de cartas con control de cambios.</li>
+  <li>Preparar planes específicos contra cada matchup.</li>
+</ul>
+
+<div class="note">Este manual cubre las funcionalidades disponibles para el rol <strong>Miembro</strong>. Las funciones administrativas (gestión de usuarios, decisiones finales) son exclusivas del Admin.</div>
+
+<!-- ==================== 2. REGISTRO ==================== -->
+<h2 id="registro">2. Registro y Activación de Cuenta</h2>
+
+<h3>2.1 Obtener una invitación</h3>
+<p>Para registrarte necesitas un <strong>link de invitación</strong> generado por el administrador del equipo. El link tiene el formato:</p>
+<p style="background:#f1f5f9; padding:0.5rem 1rem; border-radius:8px; font-family:monospace; font-size:0.85rem; word-break:break-all;">
+  https://tu-dominio.com/register?token=abc123...
+</p>
+
+<div class="warning">Los links de invitación expiran en 7 días. Solicita uno nuevo al admin si el tuyo expiró.</div>
+
+<h3>2.2 Crear tu cuenta</h3>
+<div class="steps">
+  <div class="step">Abre el link de invitación que te envió el admin.</div>
+  <div class="step">Completa el formulario: <strong>Nombre</strong>, <strong>Email</strong> y <strong>Contraseña</strong> (mínimo 6 caracteres).</div>
+  <div class="step">Haz clic en <strong>"Crear Cuenta"</strong>.</div>
+  <div class="step">Serás redirigido a la página de login.</div>
+</div>
+
+<div class="screenshot">Captura: Página de registro con formulario de nombre, email y contraseña</div>
+
+<h3>2.3 Esperar activación</h3>
+<p>
+  Tu cuenta se crea en estado <strong>inactivo</strong> por defecto. Al intentar iniciar sesión verás el mensaje:
+  <em>"Tu cuenta aún no ha sido activada por el admin"</em>.
+</p>
+<p>Contacta al administrador del equipo para que active tu cuenta desde el Panel de Administración.</p>
+
+<div class="screenshot">Captura: Página de "Cuenta pendiente de activación" con ícono ⏳</div>
+
+<!-- ==================== 3. LOGIN ==================== -->
+<h2 id="login">3. Inicio de Sesión</h2>
+
+<div class="steps">
+  <div class="step">Ingresa a la URL de la plataforma (ej: <em>https://tu-dominio.com</em>).</div>
+  <div class="step">Introduce tu <strong>Email</strong> y <strong>Contraseña</strong>.</div>
+  <div class="step">Haz clic en <strong>"Ingresar"</strong>.</div>
+</div>
+<p>También puedes iniciar sesión con <strong>Google</strong> haciendo clic en el botón correspondiente.</p>
+
+<div class="tip">Si olvidaste tu contraseña, contacta al admin del equipo.</div>
+
+<div class="screenshot">Captura: Página de login con campos de email/contraseña y botón de Google</div>
+
+<!-- ==================== 4. NAVEGACIÓN ==================== -->
+<h2 id="nav">4. Navegación General</h2>
+
+<h3>4.1 Barra lateral (Desktop)</h3>
+<p>En pantallas grandes verás una barra lateral fija a la izquierda con las siguientes secciones:</p>
+<table>
+  <tr><th>Ícono</th><th>Sección</th><th>Función</th></tr>
+  <tr><td>📊</td><td>Dashboard</td><td>Resumen general y actividad reciente</td></tr>
+  <tr><td>🔍</td><td>Meta</td><td>Mapa del metagame con tier list</td></tr>
+  <tr><td>🃏</td><td>Decks</td><td>Asignación de decks y estados</td></tr>
+  <tr><td>⚔️</td><td>Testeo</td><td>Registro de partidas de prueba</td></tr>
+  <tr><td>📈</td><td>Análisis</td><td>Winrates y matriz de matchups</td></tr>
+  <tr><td>🔁</td><td>Iteraciones</td><td>Historial de cambios en listas</td></tr>
+  <tr><td>🧬</td><td>Decisión</td><td>Decisión final del equipo</td></tr>
+  <tr><td>🧠</td><td>Preparación</td><td>Planes por matchup</td></tr>
+</table>
+
+<p>En la parte inferior de la barra verás tu avatar con tu nombre y un enlace para <strong>"Cerrar sesión"</strong>.</p>
+
+<h3>4.2 Navegación Móvil</h3>
+<p>En celulares y tablets, la barra lateral se oculta. Toca el ícono de <strong>hamburguesa ☰</strong> en la esquina superior izquierda para desplegar el menú.</p>
+
+<div class="screenshot">Captura: Vista del sidebar en desktop y menú hamburguesa en móvil</div>
+
+<!-- ==================== 5. DASHBOARD ==================== -->
+<h2 id="dashboard">5. Dashboard</h2>
+<p>El Dashboard es tu página principal al iniciar sesión. Muestra un resumen de la temporada activa.</p>
+
+<h3>5.1 Tarjetas de estadísticas</h3>
+<p>Verás 4 tarjetas con datos clave:</p>
+<ul>
+  <li><strong>🃏 Decks en testeo</strong> — Cantidad de decks con estado "En testeo".</li>
+  <li><strong>✅ Decks elegidos</strong> — Decks ya seleccionados para el torneo.</li>
+  <li><strong>⚔️ Partidas totales</strong> — Sets de partidas registrados.</li>
+  <li><strong>📝 Sets registrados</strong> — Total de registros de testeo.</li>
+</ul>
+
+<h3>5.2 Accesos rápidos</h3>
+<p>Tres botones con acceso directo a las tareas más comunes:</p>
+<ul>
+  <li><strong>"Mapear Meta"</strong> → Ir a la sección Meta.</li>
+  <li><strong>"Registrar Testeo"</strong> → Ir a la sección Testeo.</li>
+  <li><strong>"Ver Análisis"</strong> → Ir a la sección Análisis.</li>
+</ul>
+
+<h3>5.3 Actividad reciente</h3>
+<p>Lista de los últimos 10 sets de partidas registrados, mostrando los decks enfrentados, resultado, jugador y fecha.</p>
+
+<div class="screenshot">Captura: Dashboard con tarjetas de estadísticas, accesos rápidos y actividad reciente</div>
+
+<!-- ==================== 6. META ==================== -->
+<h2 id="meta">6. Mapa del Meta</h2>
+<p>Aquí defines los decks relevantes del metagame actual usando un sistema de tiers visual estilo <strong>TierMaker</strong>.</p>
+
+<h3>6.1 Tiers disponibles</h3>
+<table>
+  <tr><th>Tier</th><th>Color</th><th>Descripción</th></tr>
+  <tr><td><strong>S</strong></td><td style="color:#dc2626">Rojo</td><td>Los mejores decks del formato. Decks dominantes.</td></tr>
+  <tr><td><strong>A</strong></td><td style="color:#2563eb">Azul</td><td>Decks fuertes, competitivos pero no dominantes.</td></tr>
+  <tr><td><strong>B</strong></td><td style="color:#7c3aed">Púrpura</td><td>Rogue: opciones viables pero menos populares.</td></tr>
+  <tr><td><strong>C</strong></td><td style="color:#059669">Verde</td><td>Tier bajo: decks marginales o de nicho.</td></tr>
+</table>
+
+<h3>6.2 Agregar un deck al meta</h3>
+<div class="steps">
+  <div class="step">Haz clic en <strong>"+ Agregar Deck al Meta"</strong>.</div>
+  <div class="step">Se abrirá un formulario modal con estos campos:
+    <ul>
+      <li><strong>Imagen:</strong> sube una imagen del deck (opcional, formato JPG/PNG).</li>
+      <li><strong>Nombre:</strong> nombre del deck (obligatorio).</li>
+      <li><strong>Tier:</strong> selecciona S, A, B o C.</li>
+      <li><strong>Descripción:</strong> breve descripción del estilo del deck.</li>
+      <li><strong>Lista de cartas:</strong> escribe las cartas una por línea.</li>
+    </ul>
+  </div>
+  <div class="step">Haz clic en <strong>"Agregar Deck"</strong> para guardarlo.</div>
+</div>
+
+<div class="screenshot">Captura: Formulario modal de creación de deck con campos de imagen, nombre, tier, etc.</div>
+
+<h3>6.3 Mover decks entre tiers (Desktop)</h3>
+<p>Usa <strong>drag & drop</strong> (arrastrar y soltar) para mover decks entre las filas de tier. También puedes reordenar decks dentro del mismo tier arrastrándolos a la izquierda o derecha.</p>
+<p>Un indicador visual azul te mostrará dónde se insertará el deck.</p>
+
+<h3>6.4 Mover decks (Móvil)</h3>
+<p>En dispositivos móviles, cada tarjeta de deck muestra botones:</p>
+<ul>
+  <li><strong>◀ ▶</strong> — Reordenar dentro del mismo tier.</li>
+  <li><strong>↕️</strong> — Mover a otro tier (arriba o abajo).</li>
+</ul>
+
+<h3>6.5 Editar un deck</h3>
+<p>Pasa el cursor sobre la tarjeta de un deck y haz clic en el ícono <strong>✏️</strong> para editar su nombre, descripción, tier o lista de cartas.</p>
+
+<div class="screenshot">Captura: Vista del TierMaker con decks en las filas S, A, B y C</div>
+
+<div class="note">Solo el Admin puede eliminar decks (ícono 🗑️). Como miembro, puedes crear, editar y mover decks.</div>
+
+<!-- ==================== 7. DECKS ==================== -->
+<h2 id="decks">7. Selección de Decks</h2>
+<p>En esta sección asignas decks a jugadores y gestionas su estado en el proceso de preparación.</p>
+
+<h3>7.1 Resumen de estados</h3>
+<p>Tres tarjetas muestran cuántos decks están en cada estado:</p>
+<ul>
+  <li><span class="badge badge-blue">En testeo</span> — Decks que se están probando.</li>
+  <li><span class="badge badge-green">Elegido</span> — Decks seleccionados para el torneo.</li>
+  <li><span class="badge badge-red">Descartado</span> — Decks que fueron descartados.</li>
+</ul>
+
+<h3>7.2 Cambiar estado de un deck</h3>
+<div class="steps">
+  <div class="step">Busca el deck en la tabla.</div>
+  <div class="step">En la columna <strong>"Estado"</strong>, usa el menú desplegable para elegir entre: En testeo, Elegido o Descartado.</div>
+  <div class="step">El cambio se guarda automáticamente.</div>
+</div>
+
+<h3>7.3 Asignar un deck a un jugador</h3>
+<div class="steps">
+  <div class="step">En la columna <strong>"Asignado a"</strong>, selecciona un miembro del equipo del menú desplegable.</div>
+  <div class="step">Elige "Sin asignar" para remover la asignación.</div>
+</div>
+
+<div class="screenshot">Captura: Tabla de decks con columnas de estado y asignación</div>
+
+<div class="tip">La guía recomienda seleccionar: 2-3 decks Tier 1, 1-2 anti-meta y 1 rogue.</div>
+
+<!-- ==================== 8. TESTEO ==================== -->
+<h2 id="testing">8. Sistema de Testeo</h2>
+<p>Aquí registras los sets de partidas jugados entre decks del meta. Es la base para el análisis de winrates.</p>
+
+<h3>8.1 Registrar un set de partidas</h3>
+<div class="steps">
+  <div class="step">Haz clic en <strong>"+ Registrar Partidas"</strong>.</div>
+  <div class="step">Selecciona <strong>Deck A</strong> y <strong>Deck B</strong> (los decks enfrentados).</div>
+  <div class="step">Ingresa las <strong>victorias de Deck A</strong> y <strong>victorias de Deck B</strong>.</div>
+  <div class="step">Indica quién fue primero: <em>Mixto/Alternado</em>, <em>Deck A siempre</em> o <em>Deck B siempre</em>.</div>
+  <div class="step">Marca si fue <em>con Side Plan</em> (post-side) o <em>sin Side</em> (Game 1).</div>
+  <div class="step">Opcionalmente agrega <strong>notas</strong> sobre el matchup.</div>
+  <div class="step">Haz clic en <strong>"Registrar"</strong>.</div>
+</div>
+
+<div class="screenshot">Captura: Formulario de registro de partidas con todos los campos</div>
+
+<h3>8.2 Filtrar resultados</h3>
+<p>Usa el menú desplegable de filtro para ver solo los matchups de un deck específico, o "Todos los matchups" para ver todo.</p>
+
+<h3>8.3 Tabla de resultados</h3>
+<p>Cada registro muestra:</p>
+<ul>
+  <li><strong>Matchup:</strong> Deck A vs Deck B.</li>
+  <li><strong>Resultado:</strong> Victorias de cada lado (ej: 3-2).</li>
+  <li><strong>WR Deck A:</strong> Porcentaje de winrate con color (verde ≥60%, amarillo ≥40%, rojo &lt;40%).</li>
+  <li><strong>Detalles:</strong> Quién fue primero, si hubo side, notas.</li>
+  <li><strong>Jugador:</strong> Quién registró el set.</li>
+  <li><strong>Fecha:</strong> Cuándo se registró.</li>
+</ul>
+<p>Puedes eliminar un registro con el botón 🗑️ (con confirmación).</p>
+
+<div class="warning">Se recomiendan mínimo 20-30 partidas por matchup para datos fiables.</div>
+
+<div class="screenshot">Captura: Tabla de resultados de testeo con matchups, winrates y detalles</div>
+
+<!-- ==================== 9. ANÁLISIS ==================== -->
+<h2 id="analysis">9. Análisis de Winrates</h2>
+<p>Página de <strong>solo lectura</strong> que muestra los resultados agregados de todo el testeo del equipo.</p>
+
+<h3>9.1 Ranking Global de Decks</h3>
+<p>Tarjetas ordenadas por winrate que muestran:</p>
+<ul>
+  <li>Posición en el ranking (#1, #2...).</li>
+  <li>Nombre del deck y tier.</li>
+  <li>Winrate global (%) con código de color.</li>
+  <li>Total de partidas jugadas.</li>
+</ul>
+<p>También verás un <strong>gráfico de barras</strong> visual con el winrate de cada deck.</p>
+
+<h3>9.2 Matriz de Matchups</h3>
+<p>Tabla cruzada donde cada celda muestra:</p>
+<ul>
+  <li>El winrate del deck de la fila contra el deck de la columna.</li>
+  <li>El registro de victorias (ej: 12-8).</li>
+  <li>Colores: <span style="color:#16a34a">🟢 verde ≥60%</span>, <span style="color:#ca8a04">🟡 amarillo ≥40%</span>, <span style="color:#dc2626">🔴 rojo &lt;40%</span>.</li>
+</ul>
+
+<div class="screenshot">Captura: Ranking global de decks con gráfico de barras y matriz de matchups</div>
+
+<div class="tip">Matchups &lt;40% deben considerarse "imposibles". Matchups &gt;60% son favorables y deben ser priorizados.</div>
+
+<!-- ==================== 10. ITERACIONES ==================== -->
+<h2 id="iterations">10. Iteración de Listas</h2>
+<p>Aquí registras los cambios realizados a las listas de cartas de los decks. Sirve como historial de evolución de cada deck.</p>
+
+<h3>10.1 Registrar un cambio</h3>
+<div class="steps">
+  <div class="step">Selecciona el <strong>deck</strong> del menú desplegable.</div>
+  <div class="step">Haz clic en <strong>"+ Registrar Cambio"</strong>.</div>
+  <div class="step">Describe el cambio (ej: <em>"Mejorar matchup vs Elfos"</em>).</div>
+  <div class="step">Escribe las <strong>cartas agregadas</strong> (una por línea, ej: <em>2x Lluvia de Flechas</em>).</div>
+  <div class="step">Escribe las <strong>cartas removidas</strong> (una por línea).</div>
+  <div class="step">Haz clic en <strong>"Registrar"</strong>.</div>
+</div>
+
+<div class="warning">No cambies más de 3 cartas a la vez. Si intentas más, verás una advertencia de confirmación.</div>
+
+<h3>10.2 Vista de la página</h3>
+<p>La página se divide en dos columnas:</p>
+<ul>
+  <li><strong>Izquierda:</strong> Historial de cambios en formato timeline, mostrando fecha, descripción, cartas agregadas (<span style="color:#16a34a">+</span>) y removidas (<span style="color:#dc2626">-</span>).</li>
+  <li><strong>Derecha:</strong> Lista actual completa del deck.</li>
+</ul>
+
+<div class="screenshot">Captura: Vista de iteraciones con timeline de cambios y lista actual del deck</div>
+
+<!-- ==================== 11. DECISIÓN ==================== -->
+<h2 id="decision">11. Decisión Final del Team</h2>
+<p>En esta sección verás la decisión del equipo sobre qué decks llevar al torneo. <strong>Solo el Admin puede publicar decisiones.</strong></p>
+
+<h3>11.1 Enfoques posibles</h3>
+<table>
+  <tr><th>Enfoque</th><th>Descripción</th><th>Cuándo usarlo</th></tr>
+  <tr><td><strong>Opción A</strong></td><td>Todos juegan el mismo deck</td><td>Maximiza preparación. Es lo más común y efectivo.</td></tr>
+  <tr><td><strong>Opción B</strong></td><td>2-3 decks distintos</td><td>Si el meta es muy abierto y se cubren distintos matchups.</td></tr>
+</table>
+
+<h3>11.2 Qué verás</h3>
+<p>Si hay una decisión publicada, verás un banner con:</p>
+<ul>
+  <li>El enfoque elegido (Opción A o B).</li>
+  <li>Los decks seleccionados.</li>
+  <li>Las notas/justificación del admin.</li>
+  <li>La fecha de publicación.</li>
+</ul>
+<p>Si hay más de una decisión, podrás ver el historial completo.</p>
+
+<div class="screenshot">Captura: Decisión vigente del equipo con enfoque y decks elegidos</div>
+
+<!-- ==================== 12. PREPARACIÓN ==================== -->
+<h2 id="preparation">12. Preparación Final</h2>
+<p>La última etapa antes del torneo. Aquí creas planes específicos para cada matchup con los decks elegidos.</p>
+
+<h3>12.1 Seleccionar deck</h3>
+<p>Solo aparecen los decks con estado <strong>"Elegido"</strong>. Haz clic en el botón del deck que quieres preparar.</p>
+
+<h3>12.2 Checklist de preparación</h3>
+<p>Un checklist interactivo te ayuda a no olvidar ningún paso:</p>
+<ul>
+  <li>☐ Practicar mirror match</li>
+  <li>☐ Memorizar líneas de juego</li>
+  <li>☐ Definir plan vs cada matchup</li>
+  <li>☐ Side plan optimizado</li>
+  <li>☐ Conocer outs en cada situación</li>
+  <li>☐ Repaso final con el team</li>
+</ul>
+
+<div class="note">El checklist es local y no se guarda en el servidor. Es una guía personal.</div>
+
+<h3>12.3 Crear un plan de matchup</h3>
+<div class="steps">
+  <div class="step">Haz clic en <strong>"+ Nuevo Plan"</strong>.</div>
+  <div class="step">Selecciona el <strong>deck oponente</strong> (contra quién).</div>
+  <div class="step">Escribe el <strong>plan de juego</strong> (estrategia general).</div>
+  <div class="step">Indica las <strong>cartas clave</strong> del matchup.</div>
+  <div class="step">Detalla el <strong>side plan</strong> (IN: cartas que entran / OUT: cartas que salen).</div>
+  <div class="step">Haz clic en <strong>"Guardar"</strong>.</div>
+</div>
+
+<p>Puedes editar planes existentes haciendo clic en el botón <strong>"Editar"</strong> de cada tarjeta.</p>
+
+<div class="screenshot">Captura: Página de preparación con checklist, planes de matchup y formulario</div>
+
+<!-- ==================== 13. PERMISOS ==================== -->
+<h2 id="permisos">13. Resumen de Permisos</h2>
+<p>Como <strong>Miembro</strong>, tienes los siguientes permisos:</p>
+
+<table>
+  <tr><th>Acción</th><th>Permitida</th></tr>
+  <tr><td>Ver dashboard, estadísticas y actividad reciente</td><td>✅ Sí</td></tr>
+  <tr><td>Agregar decks al meta</td><td>✅ Sí</td></tr>
+  <tr><td>Editar decks del meta</td><td>✅ Sí</td></tr>
+  <tr><td>Mover decks entre tiers (drag & drop)</td><td>✅ Sí</td></tr>
+  <tr><td>Eliminar decks del meta</td><td>❌ Solo Admin</td></tr>
+  <tr><td>Cambiar estado de un deck</td><td>✅ Sí</td></tr>
+  <tr><td>Asignar decks a jugadores</td><td>✅ Sí</td></tr>
+  <tr><td>Registrar sets de partidas de testeo</td><td>✅ Sí</td></tr>
+  <tr><td>Eliminar registros de partidas</td><td>✅ Sí</td></tr>
+  <tr><td>Ver análisis y matriz de matchups</td><td>✅ Solo lectura</td></tr>
+  <tr><td>Registrar cambios de iteración en listas</td><td>✅ Sí</td></tr>
+  <tr><td>Ver decisión final del equipo</td><td>✅ Solo lectura</td></tr>
+  <tr><td>Publicar nueva decisión</td><td>❌ Solo Admin</td></tr>
+  <tr><td>Crear y editar planes de preparación</td><td>✅ Sí</td></tr>
+  <tr><td>Acceder al Panel de Administración</td><td>❌ Solo Admin</td></tr>
+</table>
+
+<div style="margin-top:3rem; padding-top:1.5rem; border-top:2px solid #e2e8f0; text-align:center; color:#94a3b8; font-size:0.85rem;">
+  <p>Manual de Usuario — MelipillaTester v1.0</p>
+  <p>©&nbsp;2026 Melipilla Testers — Preparación de Torneos — Mitos y Leyendas</p>
+</div>
+
+</body>
+</html>
